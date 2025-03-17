@@ -14,7 +14,7 @@ import {
 import Header from '../components/Header';
 import FilterBar from '../components/FilterBar';
 import ProfileCard from '../components/ProfileCard';
-import SEO from '../components/SEO/SEO';
+import CommonSEO from '../components/SEO/CommonSEO';
 import { Profile, City, Language, FilterParams } from '../types';
 import axios from 'axios';
 import { API_URL } from '../config';
@@ -34,6 +34,27 @@ const ContentContainer = styled(Container)(({ theme }) => ({
   [theme.breakpoints.down('sm')]: {
     paddingTop: theme.spacing(2),
     paddingBottom: theme.spacing(2),
+  },
+}));
+
+const ProfilesGrid = styled(Box)(({ theme }) => ({
+  display: 'grid',
+  gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))',
+  gap: theme.spacing(3),
+  margin: theme.spacing(3, 0),
+  [theme.breakpoints.down('md')]: {
+    gridTemplateColumns: 'repeat(auto-fill, minmax(250px, 1fr))',
+    gap: theme.spacing(2),
+  },
+  [theme.breakpoints.down('sm')]: {
+    gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))',
+    gap: theme.spacing(1.5),
+    margin: theme.spacing(2, 0),
+  },
+  [theme.breakpoints.down('xs')]: {
+    gridTemplateColumns: '1fr',
+    gap: theme.spacing(1),
+    margin: theme.spacing(1.5, 0),
   },
 }));
 
@@ -65,9 +86,12 @@ const WelcomeSection = styled(Box)(({ theme }) => ({
   marginBottom: theme.spacing(4),
   textAlign: 'center',
   padding: theme.spacing(2),
+  display: 'grid',
+  gap: theme.spacing(2),
   [theme.breakpoints.down('sm')]: {
     marginBottom: theme.spacing(2),
     padding: theme.spacing(1),
+    gap: theme.spacing(1),
   },
 }));
 
@@ -97,6 +121,7 @@ const initialFilters: FilterParams = {
 const HomePage: React.FC = () => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+  const isXSmall = useMediaQuery(theme.breakpoints.down('xs'));
   
   const [profiles, setProfiles] = useState<Profile[]>([]);
   const [cities, setCities] = useState<City[]>([]);
@@ -209,22 +234,18 @@ const HomePage: React.FC = () => {
     }
 
     return (
-      <Grid container spacing={isMobile ? 1 : 3}>
+      <ProfilesGrid>
         {profiles.map((profile) => (
-          <Grid item xs={12} sm={6} md={4} key={profile.id}>
-            <ProfileCard profile={profile} />
-          </Grid>
+          <ProfileCard key={profile.id} profile={profile} />
         ))}
-      </Grid>
+      </ProfilesGrid>
     );
   };
 
   return (
     <PageContainer>
-      <SEO 
+      <CommonSEO 
         cityName={selectedCity?.name} 
-        description="Эскорт услуги в России. Анкеты VIP девушек с фото и отзывами. Высокий уровень сервиса и конфиденциальность."
-        keywords="эскорт, вип эскорт, элитный эскорт, проститутки, девушки"
         isHomePage={true}
       />
       <Header
@@ -244,6 +265,7 @@ const HomePage: React.FC = () => {
             sx={{ 
               fontWeight: 'bold', 
               color: 'primary.main',
+              marginBottom: 0,
               [theme.breakpoints.down('sm')]: {
                 fontSize: '1.5rem',
                 lineHeight: 1.2,

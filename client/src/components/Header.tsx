@@ -9,6 +9,8 @@ import {
   Button,
   styled,
   SelectChangeEvent,
+  useMediaQuery,
+  useTheme,
 } from '@mui/material';
 import { Add as AddIcon, Language } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
@@ -17,6 +19,35 @@ import { City, Language as LanguageType } from '../types';
 const StyledAppBar = styled(AppBar)(({ theme }) => ({
   backgroundColor: theme.palette.primary.main,
   boxShadow: 'none',
+}));
+
+const GridToolbar = styled(Toolbar)(({ theme }) => ({
+  display: 'grid',
+  gridTemplateColumns: '1fr auto',
+  gap: theme.spacing(2),
+  padding: theme.spacing(2, 2),
+  [theme.breakpoints.down('sm')]: {
+    gridTemplateColumns: '1fr',
+    padding: theme.spacing(1, 1),
+    gap: theme.spacing(1),
+  },
+}));
+
+const ControlsContainer = styled(Box)(({ theme }) => ({
+  display: 'grid',
+  gridTemplateColumns: 'repeat(3, minmax(0, 1fr))',
+  gap: theme.spacing(1),
+  alignItems: 'center',
+  [theme.breakpoints.down('md')]: {
+    gridTemplateColumns: 'repeat(3, minmax(0, 1fr))',
+  },
+  [theme.breakpoints.down('sm')]: {
+    gridTemplateColumns: 'repeat(2, 1fr)',
+    gridTemplateRows: 'auto auto',
+    '& > *:nth-of-type(3)': {
+      gridColumn: '1 / -1',
+    },
+  },
 }));
 
 const StyledSelect = styled(Select)(({ theme }) => ({
@@ -36,6 +67,14 @@ const StyledSelect = styled(Select)(({ theme }) => ({
   },
   minWidth: 120,
   height: 40,
+  width: '100%',
+  [theme.breakpoints.down('sm')]: {
+    height: 36,
+    '& .MuiSelect-select': {
+      padding: '8px 32px 8px 12px',
+      fontSize: '0.875rem',
+    },
+  },
 }));
 
 const AddButton = styled(Button)(({ theme }) => ({
@@ -45,6 +84,11 @@ const AddButton = styled(Button)(({ theme }) => ({
     backgroundColor: theme.palette.info.dark,
   },
   height: 40,
+  width: '100%',
+  [theme.breakpoints.down('sm')]: {
+    height: 36,
+    fontSize: '0.875rem',
+  },
 }));
 
 interface HeaderProps {
@@ -65,6 +109,8 @@ const Header: React.FC<HeaderProps> = ({
   onLanguageChange,
 }) => {
   const navigate = useNavigate();
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
   const handleCityChange = (event: SelectChangeEvent<unknown>) => {
     const city = cities.find(c => c.id === Number(event.target.value));
@@ -82,21 +128,21 @@ const Header: React.FC<HeaderProps> = ({
 
   return (
     <StyledAppBar position="sticky">
-      <Toolbar>
+      <GridToolbar>
         <Typography
-          variant="h6"
+          variant={isMobile ? "body1" : "h6"}
           component="div"
           sx={{
-            flexGrow: 1,
-            cursor: 'pointer',
             fontWeight: 'bold',
+            cursor: 'pointer',
+            textAlign: isMobile ? 'center' : 'left',
           }}
           onClick={() => navigate('/')}
         >
           Проститутки {selectedCity?.name || ''}
         </Typography>
 
-        <Box sx={{ display: 'flex', gap: 2, alignItems: 'center' }}>
+        <ControlsContainer>
           <StyledSelect
             value={selectedCity?.id || ''}
             onChange={handleCityChange}
@@ -131,10 +177,10 @@ const Header: React.FC<HeaderProps> = ({
             startIcon={<AddIcon />}
             onClick={() => navigate('/add-profile')}
           >
-            Добавить анкету
+            {isMobile ? 'Добавить' : 'Добавить анкету'}
           </AddButton>
-        </Box>
-      </Toolbar>
+        </ControlsContainer>
+      </GridToolbar>
     </StyledAppBar>
   );
 };

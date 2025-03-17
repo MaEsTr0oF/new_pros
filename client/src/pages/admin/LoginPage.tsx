@@ -11,6 +11,7 @@ import {
 import { useNavigate } from 'react-router-dom';
 import { AxiosError } from 'axios';
 import { api } from '../../utils/api';
+import CommonSEO from '../../components/SEO/CommonSEO';
 
 const LoginPage: React.FC = () => {
   const navigate = useNavigate();
@@ -42,50 +43,53 @@ const LoginPage: React.FC = () => {
   };
 
   return (
-    <Container maxWidth="sm" sx={{ py: 4 }}>
-      <Paper sx={{ p: 4 }}>
-        <Typography variant="h4" component="h1" gutterBottom align="center">
-          Вход в админ-панель
-        </Typography>
+    <>
+      <CommonSEO />
+      <Container maxWidth="sm" sx={{ py: 4 }}>
+        <Paper sx={{ p: 4 }}>
+          <Typography variant="h4" component="h1" gutterBottom align="center">
+            Вход в админ-панель
+          </Typography>
 
-        {error && (
-          <Alert severity="error" sx={{ mb: 2 }}>
-            {error}
-          </Alert>
-        )}
+          {error && (
+            <Alert severity="error" sx={{ mb: 2 }}>
+              {error}
+            </Alert>
+          )}
 
-        <Box component="form" onSubmit={handleSubmit}>
-          <TextField
-            fullWidth
-            label="Имя пользователя"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-            margin="normal"
-            required
-          />
+          <Box component="form" onSubmit={handleSubmit}>
+            <TextField
+              fullWidth
+              label="Имя пользователя"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+              margin="normal"
+              required
+            />
 
-          <TextField
-            fullWidth
-            type="password"
-            label="Пароль"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            margin="normal"
-            required
-          />
+            <TextField
+              fullWidth
+              type="password"
+              label="Пароль"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              margin="normal"
+              required
+            />
 
-          <Button
-            type="submit"
-            variant="contained"
-            fullWidth
-            size="large"
-            sx={{ mt: 3 }}
-          >
-            Войти
-          </Button>
-        </Box>
-      </Paper>
-    </Container>
+            <Button
+              type="submit"
+              variant="contained"
+              fullWidth
+              size="large"
+              sx={{ mt: 3 }}
+            >
+              Войти
+            </Button>
+          </Box>
+        </Paper>
+      </Container>
+    </>
   );
 };
 

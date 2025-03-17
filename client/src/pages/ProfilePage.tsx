@@ -45,7 +45,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { Profile, City, Language } from '../types';
 import { api } from '../utils/api';
 import { serviceTranslations } from '../utils/serviceTranslations';
-import SEO from '../components/SEO/SEO';
+import CommonSEO from '../components/SEO/CommonSEO';
 import SchemaMarkup from '../components/SEO/SchemaMarkup';
 import Header from '../components/Header';
 
@@ -234,11 +234,7 @@ const ProfilePage: React.FC = () => {
     <PageContainer>
       {profile && (
         <>
-          <SEO 
-            title={`${profile.name}, ${profile.age} лет | Эскорт ${profile.city?.name || 'Москва'}`}
-            description={`${profile.name}, ${profile.age} лет, ${profile.height} см, ${profile.weight} кг. ${profile.description.substring(0, 150)}...`}
-            canonicalUrl={`https://eskortvsegorodarfreal.site/profile/${profile.id}`}
-            ogImage={profile.photos && profile.photos.length > 0 ? profile.photos[0] : undefined}
+          <CommonSEO 
             cityName={profile.city?.name}
           />
           <SchemaMarkup profile={profile} />

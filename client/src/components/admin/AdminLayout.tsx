@@ -22,6 +22,7 @@ import {
   Settings,
   Logout,
 } from '@mui/icons-material';
+import CommonSEO from '../SEO/CommonSEO';
 
 const drawerWidth = 240;
 
@@ -85,6 +86,7 @@ const AdminLayout: React.FC = () => {
 
   return (
     <Box sx={{ display: 'flex', minHeight: '100vh', bgcolor: 'background.default' }}>
+      <CommonSEO />
       <AppBar
         position="fixed"
         sx={{

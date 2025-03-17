@@ -1,16 +1,44 @@
 /* Стили для адаптивного отображения фильтров */
 .filter-buttons-container {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
-  gap: 8px;
+  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  gap: 12px;
   width: 100%;
   margin-bottom: 16px;
 }
 
+.filter-popover-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 16px;
+}
+
+.filter-checkbox-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 8px;
+}
+
+@media (max-width: 768px) {
+  .filter-buttons-container {
+    grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+    gap: 10px;
+  }
+  
+  .filter-popover-grid {
+    grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+    gap: 12px;
+  }
+  
+  .filter-checkbox-grid {
+    grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+  }
+}
+
 @media (max-width: 480px) {
   .filter-buttons-container {
-    grid-template-columns: repeat(auto-fill, minmax(70px, 1fr));
-    gap: 6px;
+    grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+    gap: 8px;
   }
   
   .filter-button {
@@ -18,16 +46,57 @@
     font-size: 12px !important;
     min-width: unset !important;
   }
+  
+  .filter-popover-grid {
+    grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+    gap: 10px;
+  }
+  
+  .filter-checkbox-grid {
+    grid-template-columns: repeat(auto-fill, minmax(100%, 1fr));
+    gap: 4px;
+  }
 }
 
 @media (max-width: 360px) {
   .filter-buttons-container {
-    grid-template-columns: repeat(auto-fill, minmax(60px, 1fr));
-    gap: 4px;
+    grid-template-columns: repeat(auto-fill, minmax(70px, 1fr));
+    gap: 6px;
   }
   
   .filter-button {
     padding: 4px 6px !important;
     font-size: 11px !important;
+  }
+  
+  .filter-popover-grid {
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+}
+
+/* Стили для поповеров фильтров */
+.filter-popover-header {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.filter-popover-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-top: 16px;
+}
+
+@media (max-width: 480px) {
+  .filter-popover-header {
+    margin-bottom: 12px;
+  }
+  
+  .filter-popover-actions {
+    gap: 8px;
+    margin-top: 12px;
   }
 }

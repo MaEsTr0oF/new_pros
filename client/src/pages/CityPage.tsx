@@ -13,7 +13,7 @@ import {
   Link as MuiLink,
 } from '@mui/material';
 import { API_URL } from '../config';
-import SEO from '../components/SEO/SEO';
+import CommonSEO from '../components/SEO/CommonSEO';
 import ProfileCard from '../components/ProfileCard';
 import Header from '../components/Header';
 import FilterBar from '../components/FilterBar';
@@ -211,7 +211,7 @@ const CityPage: React.FC = () => {
   return (
     <PageContainer>
       {selectedCity && (
-        <SEO 
+        <CommonSEO 
           cityName={selectedCity.name} 
           isHomePage={false}
         />
