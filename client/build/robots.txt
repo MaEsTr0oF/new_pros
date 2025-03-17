@@ -1,0 +1,68 @@
+User-agent: *
+Allow: /
+Allow: /moskva
+Allow: /sankt-peterburg
+Allow: /novosibirsk
+Allow: /ekaterinburg
+Allow: /kazan
+Allow: /nizhniy-novgorod
+Allow: /chelyabinsk
+Allow: /omsk
+Allow: /samara
+Allow: /rostov-na-donu
+Allow: /ufa
+Allow: /krasnoyarsk
+Allow: /perm
+Allow: /voronezh
+Allow: /volgograd
+Allow: /krasnodar
+Allow: /saratov
+Allow: /tyumen
+Allow: /tolyatti
+Allow: /izhevsk
+Allow: /barnaul
+Allow: /ulyanovsk
+Allow: /irkutsk
+Allow: /khabarovsk
+Allow: /yaroslavl
+Allow: /vladivostok
+Allow: /makhachkala
+Allow: /tomsk
+Allow: /orenburg
+Allow: /kemerovo
+Allow: /novokuznetsk
+Allow: /ryazan
+Allow: /astrakhan
+Allow: /naberezhnye-chelny
+Allow: /penza
+Allow: /lipetsk
+Allow: /kirov
+Allow: /cheboksary
+Allow: /kaliningrad
+Allow: /tula
+Allow: /sochi
+Allow: /stavropol
+Allow: /sevastopol
+Allow: /ulan-ude
+Allow: /tver
+Allow: /magnitogorsk
+Allow: /ivanovo
+Allow: /bryansk
+Allow: /belgorod
+Allow: /surgut
+Allow: /profile/*
+Disallow: /admin
+Disallow: /admin/*
+
+# Указываем главное зеркало сайта
+Host: https://eskortvsegorodarfreal.site
+
+# Указываем путь к sitemap
+Sitemap: https://eskortvsegorodarfreal.site/sitemap.xml
+
+# Добавляем дополнительные директивы для роботов
+User-agent: Googlebot
+Allow: /
+
+User-agent: Yandex
+Allow: /

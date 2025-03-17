@@ -1,0 +1,33 @@
+/* Стили для адаптивного отображения фильтров */
+.filter-buttons-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+  gap: 8px;
+  width: 100%;
+  margin-bottom: 16px;
+}
+
+@media (max-width: 480px) {
+  .filter-buttons-container {
+    grid-template-columns: repeat(auto-fill, minmax(70px, 1fr));
+    gap: 6px;
+  }
+  
+  .filter-button {
+    padding: 6px 8px !important;
+    font-size: 12px !important;
+    min-width: unset !important;
+  }
+}
+
+@media (max-width: 360px) {
+  .filter-buttons-container {
+    grid-template-columns: repeat(auto-fill, minmax(60px, 1fr));
+    gap: 4px;
+  }
+  
+  .filter-button {
+    padding: 4px 6px !important;
+    font-size: 11px !important;
+  }
+}
