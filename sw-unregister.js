@@ -1,23 +1,18 @@
-// Отключение существующего Service Worker
+// Скрипт для отмены регистрации Service Worker
 if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.getRegistrations().then(function(registrations) {
-    for (let registration of registrations) {
-      registration.unregister();
-      console.log('Service Worker unregistered');
-    }
-    // После отключения всех Service Worker перезагрузим страницу
-    if (registrations.length > 0) {
-      window.location.reload();
-    }
-  });
-}
-
-// Блокировка запуска Service Worker в будущем
-if (window.navigator && navigator.serviceWorker) {
-  navigator.serviceWorker.register = function() {
-    return new Promise(function(resolve) {
-      console.log('Service Worker registration blocked');
-      resolve({ scope: '/' });
+  window.addEventListener('load', function() {
+    navigator.serviceWorker.getRegistrations().then(function(registrations) {
+      for (let registration of registrations) {
+        registration.unregister();
+        console.log('Service Worker успешно отключен');
+      }
     });
+  });
+
+  // Перехватываем попытки регистрации Service Worker
+  const originalRegister = navigator.serviceWorker.register;
+  navigator.serviceWorker.register = function() {
+    console.warn('Попытка регистрации Service Worker предотвращена');
+    return Promise.reject(new Error('Регистрация Service Worker отключена'));
   };
 }
