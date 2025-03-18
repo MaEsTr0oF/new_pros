@@ -45,24 +45,26 @@ model Profile {
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
   isActive      Boolean  @default(true)
-  
+  order         Int      @default(0)
+
+  order         Int      @default(0)
   // Appearance
   nationality   String?
   hairColor     String?
   bikiniZone    String?
   gender        String   @default("female")
   orientation   String   @default("hetero")
-  
+
   // Location
   inCall        Boolean  @default(true)
   outCall       Boolean  @default(false)
-  
+
   // Additional filters
   isNonSmoking  Boolean  @default(false)
   isNew         Boolean  @default(true)
   isWaitingCall Boolean  @default(false)
   is24Hours     Boolean  @default(false)
-  
+
   // Neighbors
   isAlone       Boolean  @default(true)
   withFriend    Boolean  @default(false)

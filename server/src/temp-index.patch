@@ -1,0 +1,5 @@
+// Импортируем middleware для временных маршрутов
+import apiMiddleware from './middlewares/api-middleware';
+
+// Добавляем временные маршруты
+app.use('/api', apiMiddleware);

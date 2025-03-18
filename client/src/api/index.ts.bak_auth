@@ -1,0 +1,104 @@
+import axios from 'axios';
+import { API_URL } from '../config';
+
+const getToken = () => localStorage.getItem('token');
+
+// Функция для создания заголовков с токеном авторизации
+export const getAuthHeaders = () => {
+  const token = getToken();
+  return {
+    headers: {
+      Authorization: token ? `Bearer ${token}` : ''
+    }
+  };
+};
+
+// API для профилей
+export const profilesApi = {
+  // Получить все профили
+  getAll: async () => {
+    return axios.get(`${API_URL}/admin/profiles`, getAuthHeaders());
+  },
+  
+  // Получить профиль по ID
+  getById: async (id: number) => {
+    return axios.get(`${API_URL}/admin/profiles/${id}`, getAuthHeaders());
+  },
+  
+  // Создать новый профиль
+  create: async (profileData: any) => {
+    return axios.post(`${API_URL}/admin/profiles`, profileData, getAuthHeaders());
+  },
+  
+  // Обновить существующий профиль
+  update: async (id: number, profileData: any) => {
+    return axios.put(`${API_URL}/admin/profiles/${id}`, profileData, getAuthHeaders());
+  },
+  
+  // Удалить профиль
+  delete: async (id: number) => {
+    return axios.delete(`${API_URL}/admin/profiles/${id}`, getAuthHeaders());
+  },
+  
+  // Переместить профиль вверх
+  moveUp: async (id: number) => {
+    return axios.patch(`${API_URL}/admin/profiles/${id}/moveUp`, {}, getAuthHeaders());
+  },
+  
+  // Переместить профиль вниз
+  moveDown: async (id: number) => {
+    return axios.patch(`${API_URL}/admin/profiles/${id}/moveDown`, {}, getAuthHeaders());
+  },
+  
+  // Верифицировать профиль
+  verify: async (id: number) => {
+    return axios.patch(`${API_URL}/admin/profiles/${id}/verify`, {}, getAuthHeaders());
+  }
+};
+
+// API для городов
+export const citiesApi = {
+  // Получить все города
+  getAll: async () => {
+    return axios.get(`${API_URL}/cities`);
+  },
+  
+  // Создать новый город
+  create: async (cityData: any) => {
+    return axios.post(`${API_URL}/admin/cities`, cityData, getAuthHeaders());
+  },
+  
+  // Обновить существующий город
+  update: async (id: number, cityData: any) => {
+    return axios.put(`${API_URL}/admin/cities/${id}`, cityData, getAuthHeaders());
+  },
+  
+  // Удалить город
+  delete: async (id: number) => {
+    return axios.delete(`${API_URL}/admin/cities/${id}`, getAuthHeaders());
+  }
+};
+
+// API для аутентификации
+export const authApi = {
+  // Вход в систему
+  login: async (username: string, password: string) => {
+    return axios.post(`${API_URL}/auth/login`, { username, password });
+  },
+  
+  // Проверка текущего токена
+  checkToken: async () => {
+    return axios.get(`${API_URL}/admin/profile`, getAuthHeaders());
+  }
+};
+
+// Объединяем все API в один объект
+const apiObject = {
+  profiles: profilesApi,
+  cities: citiesApi,
+  auth: authApi
+};
+
+// Экспортируем объект API как по умолчанию, так и именованный экспорт
+export const api = apiObject;
+export default apiObject;

@@ -1,0 +1,265 @@
+import React, { useState, useEffect } from 'react';
+import {
+  Container,
+  Typography,
+  Grid,
+  Card,
+  CardContent,
+  CardMedia,
+  CardActions,
+  Button,
+  CircularProgress,
+  Box,
+  Alert,
+  IconButton,
+  Tooltip,
+  Chip,
+  Stack,
+  Divider,
+  List,
+  ListItem,
+  ListItemText,
+  Paper,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow
+} from '@mui/material';
+import {
+  Delete as DeleteIcon,
+  Edit as EditIcon,
+  Visibility as VisibilityIcon,
+  VisibilityOff as VisibilityOffIcon,
+  VerifiedUser as VerifiedUserIcon,
+  ArrowUpward as ArrowUpIcon,
+  ArrowDownward as ArrowDownIcon
+} from '@mui/icons-material';
+import { api } from '../../api';
+import { Profile } from '../../types';
+
+const DashboardPage: React.FC = () => {
+  const [profiles, setProfiles] = useState<Profile[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
+
+  useEffect(() => {
+    fetchProfiles();
+  }, []);
+
+  const fetchProfiles = async () => {
+    try {
+      setLoading(true);
+      const response = await api.get('/admin/profiles');
+      setProfiles(response.data);
+      setError('');
+    } catch (err) {
+      console.error('Error fetching profiles:', err);
+      setError('Ошибка при загрузке анкет');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleDeleteProfile = async (id: number) => {
+    if (!window.confirm('Вы уверены, что хотите удалить эту анкету?')) {
+      return;
+    }
+
+    try {
+      await api.delete(`/admin/profiles/${id}`);
+      fetchProfiles();
+    } catch (err) {
+      console.error('Error deleting profile:', err);
+      setError('Ошибка при удалении анкеты');
+    }
+  };
+
+  const handleToggleStatus = async (profile: Profile) => {
+    try {
+      await api.put(`/admin/profiles/${profile.id}`, {
+        ...profile,
+        isActive: !profile.isActive
+      });
+      fetchProfiles();
+    } catch (err) {
+      console.error('Error toggling profile status:', err);
+      setError('Ошибка при изменении статуса анкеты');
+    }
+  };
+
+  const handleVerifyProfile = async (id: number) => {
+    try {
+      await api.patch(`/admin/profiles/${id}/verify`);
+      fetchProfiles();
+    } catch (err) {
+      console.error('Error verifying profile:', err);
+      setError('Ошибка при верификации анкеты');
+    }
+  };
+
+  const handleMoveUp = async (id: number) => {
+    try {
+      await api.patch(`/admin/profiles/${id}/moveUp`);
+      fetchProfiles();
+    } catch (err) {
+      console.error('Error moving profile up:', err);
+      setError('Ошибка при перемещении анкеты вверх');
+    }
+  };
+
+  const handleMoveDown = async (id: number) => {
+    try {
+      await api.patch(`/admin/profiles/${id}/moveDown`);
+      fetchProfiles();
+    } catch (err) {
+      console.error('Error moving profile down:', err);
+      setError('Ошибка при перемещении анкеты вниз');
+    }
+  };
+
+  if (loading) {
+    return (
+      <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '80vh' }}>
+        <CircularProgress />
+      </Box>
+    );
+  }
+
+  return (
+    <Container maxWidth="lg">
+      <Typography variant="h4" component="h1" gutterBottom sx={{ mt: 3 }}>
+        Панель управления
+      </Typography>
+
+      {error && (
+        <Alert severity="error" sx={{ mb: 2 }}>
+          {error}
+        </Alert>
+      )}
+
+      <Typography variant="h5" component="h2" gutterBottom sx={{ mt: 3 }}>
+        Все анкеты ({profiles.length})
+      </Typography>
+
+      <TableContainer component={Paper}>
+        <Table sx={{ minWidth: 650 }} aria-label="Таблица анкет">
+          <TableHead>
+            <TableRow>
+              <TableCell>ID</TableCell>
+              <TableCell>Фото</TableCell>
+              <TableCell>Имя</TableCell>
+              <TableCell>Город</TableCell>
+              <TableCell>Статус</TableCell>
+              <TableCell>Порядок</TableCell>
+              <TableCell>Действия</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {profiles.sort((a, b) => (a.order || 0) - (b.order || 0)).map((profile) => (
+              <TableRow key={profile.id}>
+                <TableCell>{profile.id}</TableCell>
+                <TableCell>
+                  {profile.photos && profile.photos.length > 0 ? (
+                    <img 
+                      src={profile.photos[0]} 
+                      alt={profile.name} 
+                      style={{ width: 60, height: 60, objectFit: 'cover', borderRadius: '4px' }}
+                    />
+                  ) : (
+                    'Нет фото'
+                  )}
+                </TableCell>
+                <TableCell>
+                  {profile.name}, {profile.age}
+                  {profile.isVerified && (
+                    <Chip
+                      icon={<VerifiedUserIcon />}
+                      label="Проверено"
+                      size="small"
+                      color="success"
+                      sx={{ ml: 1 }}
+                    />
+                  )}
+                </TableCell>
+                <TableCell>{profile.city?.name || `ID: ${profile.cityId}`}</TableCell>
+                <TableCell>
+                  <Chip
+                    label={profile.isActive ? 'Активна' : 'Неактивна'}
+                    color={profile.isActive ? 'success' : 'error'}
+                    size="small"
+                  />
+                </TableCell>
+                <TableCell>{profile.order || 0}</TableCell>
+                <TableCell>
+                  <Stack direction="row" spacing={1}>
+                    <Tooltip title="Редактировать">
+                      <IconButton 
+                        size="small" 
+                        color="primary"
+                        component="a" 
+                        href={`/admin/profiles/edit/${profile.id}`}
+                      >
+                        <EditIcon fontSize="small" />
+                      </IconButton>
+                    </Tooltip>
+                    <Tooltip title={profile.isActive ? 'Отключить' : 'Включить'}>
+                      <IconButton
+                        size="small"
+                        color={profile.isActive ? 'success' : 'error'}
+                        onClick={() => handleToggleStatus(profile)}
+                      >
+                        {profile.isActive ? <VisibilityIcon fontSize="small" /> : <VisibilityOffIcon fontSize="small" />}
+                      </IconButton>
+                    </Tooltip>
+                    <Tooltip title="Переместить вверх">
+                      <IconButton
+                        size="small"
+                        color="primary"
+                        onClick={() => handleMoveUp(profile.id)}
+                      >
+                        <ArrowUpIcon fontSize="small" />
+                      </IconButton>
+                    </Tooltip>
+                    <Tooltip title="Переместить вниз">
+                      <IconButton
+                        size="small"
+                        color="primary"
+                        onClick={() => handleMoveDown(profile.id)}
+                      >
+                        <ArrowDownIcon fontSize="small" />
+                      </IconButton>
+                    </Tooltip>
+                    {!profile.isVerified && (
+                      <Tooltip title="Верифицировать">
+                        <IconButton
+                          size="small"
+                          color="info"
+                          onClick={() => handleVerifyProfile(profile.id)}
+                        >
+                          <VerifiedUserIcon fontSize="small" />
+                        </IconButton>
+                      </Tooltip>
+                    )}
+                    <Tooltip title="Удалить">
+                      <IconButton
+                        size="small"
+                        color="error"
+                        onClick={() => handleDeleteProfile(profile.id)}
+                      >
+                        <DeleteIcon fontSize="small" />
+                      </IconButton>
+                    </Tooltip>
+                  </Stack>
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
+    </Container>
+  );
+};
+
+export default DashboardPage;

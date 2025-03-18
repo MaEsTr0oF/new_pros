@@ -1,0 +1,6 @@
+# This file is manually created for Prisma Migrate
+# Please do not modify it directly
+
+[migration]
+name = "add_order_to_profile"
+dependencies = []

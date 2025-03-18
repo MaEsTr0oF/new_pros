@@ -1,3 +1,4 @@
+import apiMiddleware from './middleware/api-middleware';
 import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
@@ -57,6 +58,8 @@ app.use(cors({
 app.set('trust proxy', 1);
 
 app.use(express.json({ limit: '50mb' }));
+// Применяем API middleware
+app.use('/api', apiMiddleware);
 app.use(express.urlencoded({ extended: true, limit: '50mb' }));
 
 // Middleware для логирования запросов
@@ -73,6 +76,7 @@ app.get('/api/health', (req, res) => {
 app.get('/api/profiles', profileController.getProfiles);
 app.get('/api/profiles/:id', profileController.getProfileById);
 app.get('/api/cities', cityController.getCities);
+app.get('/api/cities/paginated', cityController.getCitiesPaginated);
 app.get('/api/settings/public', settingsController.getPublicSettings);
 
 // Маршруты администратора
@@ -83,6 +87,8 @@ app.use('/api/admin', authMiddleware);
 app.get('/api/admin/profiles', profileController.getProfiles);
 app.post('/api/admin/profiles', profileController.createProfile);
 app.put('/api/admin/profiles/:id', profileController.updateProfile);
+app.patch('/api/admin/profiles/:id/move-up', profileController.moveProfileUp);
+app.patch('/api/admin/profiles/:id/move-down', profileController.moveProfileDown);
 app.delete('/api/admin/profiles/:id', profileController.deleteProfile);
 app.patch('/api/admin/profiles/:id/verify', profileController.verifyProfile);
 app.patch("/api/admin/profiles/:id/moveUp", profileController.moveProfileUp);

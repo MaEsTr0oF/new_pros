@@ -1,5 +1,12 @@
 #!/bin/bash
-echo "Тестирование API /api/districts/1"
-curl -v http://escort-server:5001/api/districts/1
-echo -e "\n\nТестирование API /api/services"
-curl -v http://escort-server:5001/api/services
+set -e
+
+echo "🔍 Проверка API endpoints..."
+
+echo "👉 Проверка работы API для районов..."
+curl -s http://localhost:5001/api/districts/1 | jq .
+
+echo "👉 Проверка работы API для услуг..."
+curl -s http://localhost:5001/api/services | jq .
+
+echo "✅ Проверка API завершена"

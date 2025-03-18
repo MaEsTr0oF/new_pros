@@ -11,6 +11,8 @@ RUN npm install
 # Копируем исходный код
 COPY . .
 
+# Устанавливаем переменную окружения
+ENV REACT_APP_API_URL=https://eskortvsegorodarfreal.site/api
 # Собираем приложение
 RUN npm run build
 

@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import ProfileOrderButtons from '../../components/admin/ProfileOrderButtons';
-import ProfileOrderButtons from '../../components/admin/ProfileOrderButtons';
 import {
   Container,
   Box,
@@ -15,8 +14,6 @@ import {
   Typography,
   Tooltip,
 } from '@mui/material';
-import ProfileOrderButtons from '../../components/admin/ProfileOrderButtons';
-import ProfileOrderButtons from '../../components/admin/ProfileOrderButtons';
 import {
   Add as AddIcon,
   Edit as EditIcon,
@@ -27,11 +24,7 @@ import {
   ArrowUpward as ArrowUpIcon,
   ArrowDownward as ArrowDownIcon,
 } from "@mui/icons-material";
-import ProfileOrderButtons from '../../components/admin/ProfileOrderButtons';
-import ProfileOrderButtons from '../../components/admin/ProfileOrderButtons';
 import { api } from '../../utils/api';
-import ProfileOrderButtons from '../../components/admin/ProfileOrderButtons';
-import ProfileOrderButtons from '../../components/admin/ProfileOrderButtons';
 import { Profile, City } from '../../types';
 import ProfileEditor from '../../components/admin/ProfileEditor';
 

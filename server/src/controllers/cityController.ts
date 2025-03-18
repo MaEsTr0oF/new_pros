@@ -3,31 +3,47 @@ import { PrismaClient } from '@prisma/client';
 
 const prisma = new PrismaClient();
 
-export const getCities = async (_req: Request, res: Response) => {
+export const getCities = async (req: Request, res: Response) => {
   try {
-    console.log('Fetching cities...');
     const cities = await prisma.city.findMany({
-      include: {
-        _count: {
-          select: { profiles: true }
-        }
+      orderBy: {
+        name: 'asc'  // Сортировка по имени в порядке возрастания
       }
     });
-
-    console.log('Found cities:', cities);
-
-    // Преобразуем данные для совместимости с фронтендом
-    const formattedCities = cities.map(city => ({
-      id: city.id,
-      name: city.name,
-      profiles: { length: city._count.profiles }
-    }));
-
-    console.log('Formatted cities:', formattedCities);
-    res.json(formattedCities);
+    res.json(cities);
   } catch (error) {
-    console.error('Error fetching cities:', error);
-    res.status(500).json({ error: 'Failed to fetch cities' });
+    console.error('Ошибка при получении городов:', error);
+    res.status(500).json({ error: 'Не удалось получить города' });
+  }
+};
+
+export const getCitiesPaginated = async (req: Request, res: Response) => {
+  try {
+    const page = Number(req.query.page) || 1;
+    const limit = Number(req.query.limit) || 50;
+    const skip = (page - 1) * limit;
+    
+    const [cities, total] = await prisma.$transaction([
+      prisma.city.findMany({
+        orderBy: { name: 'asc' },
+        skip,
+        take: limit
+      }),
+      prisma.city.count()
+    ]);
+    
+    res.json({
+      cities,
+      pagination: {
+        page,
+        limit,
+        total,
+        pages: Math.ceil(total / limit)
+      }
+    });
+  } catch (error) {
+    console.error('Ошибка при получении городов:', error);
+    res.status(500).json({ error: 'Не удалось получить города' });
   }
 };
 
@@ -38,8 +54,8 @@ export const createCity = async (req: Request, res: Response) => {
     });
     res.status(201).json(city);
   } catch (error) {
-    console.error('Error creating city:', error);
-    res.status(500).json({ error: 'Failed to create city' });
+    console.error('Ошибка при создании города:', error);
+    res.status(500).json({ error: 'Не удалось создать город' });
   }
 };
 
@@ -52,8 +68,8 @@ export const updateCity = async (req: Request, res: Response) => {
     });
     res.json(city);
   } catch (error) {
-    console.error('Error updating city:', error);
-    res.status(500).json({ error: 'Failed to update city' });
+    console.error('Ошибка при обновлении города:', error);
+    res.status(500).json({ error: 'Не удалось обновить город' });
   }
 };
 
@@ -65,7 +81,7 @@ export const deleteCity = async (req: Request, res: Response) => {
     });
     res.status(204).send();
   } catch (error) {
-    console.error('Error deleting city:', error);
-    res.status(500).json({ error: 'Failed to delete city' });
+    console.error('Ошибка при удалении города:', error);
+    res.status(500).json({ error: 'Не удалось удалить город' });
   }
-}; 
+};

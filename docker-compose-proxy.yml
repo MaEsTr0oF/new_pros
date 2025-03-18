@@ -1,0 +1,20 @@
+version: "3.8"
+
+services:
+  proxy-server:
+    image: node:18-alpine
+    container_name: escort-proxy
+    restart: unless-stopped
+    working_dir: /app
+    volumes:
+      - ./proxy-server:/app
+    ports:
+      - "3000:3000"
+    command: sh -c "npm install && node index.js"
+    networks:
+      - escort-network
+
+networks:
+  escort-network:
+    external: true
+    name: escort-project_escort-network

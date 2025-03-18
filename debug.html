@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>API Debug</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 20px; }
+    button { margin: 5px; padding: 5px 10px; }
+    .output { margin-top: 10px; padding: 10px; background-color: #f5f5f5; }
+    h2 { margin-top: 20px; }
+  </style>
+</head>
+<body>
+  <h1>Отладка API</h1>
+  
+  <h2>Стандартные API</h2>
+  <button id="testDistricts">Тест /api/districts/1</button>
+  <button id="testServices">Тест /api/services</button>
+  <div id="apiOutput" class="output">Результаты запросов будут отображены здесь</div>
+  
+  <h2>Сортировка анкет</h2>
+  <input type="text" id="profileId" placeholder="ID анкеты">
+  <button id="moveUp">Переместить вверх</button>
+  <button id="moveDown">Переместить вниз</button>
+  <div id="sortOutput" class="output">Результаты сортировки будут отображены здесь</div>
+  
+  <h2>Отключение Service Worker</h2>
+  <button id="disableSW">Отключить Service Worker</button>
+  <div id="swOutput" class="output">Результаты отключения Service Worker будут отображены здесь</div>
+  
+  <script>
+    // Функция для тестирования API districts
+    document.getElementById('testDistricts').addEventListener('click', async function() {
+      try {
+        const response = await fetch('http://77.73.235.201:3001/api/districts/1');
+        const data = await response.json();
+        document.getElementById('apiOutput').innerHTML = `
+          <b>Запрос к /api/districts/1 успешен:</b><br>
+          <pre>${JSON.stringify(data, null, 2)}</pre>
+        `;
+      } catch (error) {
+        document.getElementById('apiOutput').innerHTML = `
+          <b>Ошибка при запросе к /api/districts/1:</b><br>
+          <pre>${error.message}</pre>
+        `;
+      }
+    });
+    
+    // Функция для тестирования API services
+    document.getElementById('testServices').addEventListener('click', async function() {
+      try {
+        const response = await fetch('http://77.73.235.201:3001/api/services');
+        const data = await response.json();
+        document.getElementById('apiOutput').innerHTML = `
+          <b>Запрос к /api/services успешен:</b><br>
+          <pre>${JSON.stringify(data, null, 2)}</pre>
+        `;
+      } catch (error) {
+        document.getElementById('apiOutput').innerHTML = `
+          <b>Ошибка при запросе к /api/services:</b><br>
+          <pre>${error.message}</pre>
+        `;
+      }
+    });
+    
+    // Функция для перемещения анкеты вверх
+    document.getElementById('moveUp').addEventListener('click', async function() {
+      const profileId = document.getElementById('profileId').value;
+      if (!profileId) {
+        document.getElementById('sortOutput').innerHTML = '<b>Ошибка:</b> Введите ID анкеты';
+        return;
+      }
+      
+      try {
+        const token = localStorage.getItem('token');
+        if (!token) {
+          document.getElementById('sortOutput').innerHTML = '<b>Ошибка:</b> Нет токена авторизации';
+          return;
+        }
+        
+        const response = await fetch(`http://77.73.235.201:3000/api/admin/profiles/${profileId}/moveUp`, {
+          method: 'PATCH',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+          }
+        });
+        
+        const data = await response.json();
+        document.getElementById('sortOutput').innerHTML = `
+          <b>Перемещение анкеты ${profileId} вверх:</b><br>
+          <pre>${JSON.stringify(data, null, 2)}</pre>
+        `;
+      } catch (error) {
+        document.getElementById('sortOutput').innerHTML = `
+          <b>Ошибка при перемещении анкеты ${profileId} вверх:</b><br>
+          <pre>${error.message}</pre>
+        `;
+      }
+    });
+    
+    // Функция для перемещения анкеты вниз
+    document.getElementById('moveDown').addEventListener('click', async function() {
+      const profileId = document.getElementById('profileId').value;
+      if (!profileId) {
+        document.getElementById('sortOutput').innerHTML = '<b>Ошибка:</b> Введите ID анкеты';
+        return;
+      }
+      
+      try {
+        const token = localStorage.getItem('token');
+        if (!token) {
+          document.getElementById('sortOutput').innerHTML = '<b>Ошибка:</b> Нет токена авторизации';
+          return;
+        }
+        
+        const response = await fetch(`http://77.73.235.201:3000/api/admin/profiles/${profileId}/moveDown`, {
+          method: 'PATCH',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+          }
+        });
+        
+        const data = await response.json();
+        document.getElementById('sortOutput').innerHTML = `
+          <b>Перемещение анкеты ${profileId} вниз:</b><br>
+          <pre>${JSON.stringify(data, null, 2)}</pre>
+        `;
+      } catch (error) {
+        document.getElementById('sortOutput').innerHTML = `
+          <b>Ошибка при перемещении анкеты ${profileId} вниз:</b><br>
+          <pre>${error.message}</pre>
+        `;
+      }
+    });
+    
+    // Отключение Service Worker
+    document.getElementById('disableSW').addEventListener('click', function() {
+      if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.getRegistrations().then(function(registrations) {
+          if (registrations.length === 0) {
+            document.getElementById('swOutput').innerHTML = '<b>Service Worker не зарегистрирован</b>';
+            return;
+          }
+          
+          let unregistered = 0;
+          registrations.forEach(function(registration) {
+            registration.unregister().then(function(success) {
+              unregistered++;
+              document.getElementById('swOutput').innerHTML = `
+                <b>Отключение Service Worker:</b><br>
+                Найдено: ${registrations.length}, отключено: ${unregistered}
+              `;
+              
+              if (unregistered === registrations.length) {
+                document.getElementById('swOutput').innerHTML += '<br><b>Все Service Worker успешно отключены!</b>';
+              }
+            });
+          });
+        });
+      } else {
+        document.getElementById('swOutput').innerHTML = '<b>Service Worker не поддерживается в этом браузере</b>';
+      }
+    });
+  </script>
+</body>
+</html>

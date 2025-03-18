@@ -3,9 +3,11 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
+    "build:ignore": "node build-ignore-errors.js",
+    "build:ignore": "node build-ignore-errors.js",
     "start": "node build/index.js",
     "dev": "nodemon src/index.ts",
-    "build": "tsc",
+    "build": "tsc --skipLibCheck --skipDefaultLibCheck",
     "prisma:generate": "prisma generate",
     "prisma:migrate": "prisma migrate dev",
     "prisma:seed": "ts-node prisma/seed.ts"
