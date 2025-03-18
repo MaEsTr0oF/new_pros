@@ -1,0 +1,59 @@
+import React from 'react';
+import { IconButton, Tooltip, Stack } from '@mui/material';
+import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
+import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
+import { api } from '../../api';
+
+interface ProfileOrderButtonsProps {
+  profileId: number;
+  onSuccess: () => void;
+}
+
+const ProfileOrderButtons: React.FC<ProfileOrderButtonsProps> = ({ profileId, onSuccess }) => {
+  const handleMoveUp = async () => {
+    try {
+      // Используем объектную модель API
+      await api.profiles.moveUp(profileId);
+      onSuccess();
+    } catch (error) {
+      console.error('Error moving profile up:', error);
+    }
+  };
+
+  const handleMoveDown = async () => {
+    try {
+      // Используем объектную модель API
+      await api.profiles.moveDown(profileId);
+      onSuccess();
+    } catch (error) {
+      console.error('Error moving profile down:', error);
+    }
+  };
+
+  return (
+    <Stack direction="row" spacing={1} justifyContent="center">
+      <Tooltip title="Переместить выше">
+        <IconButton
+          size="small"
+          color="primary"
+          onClick={handleMoveUp}
+          aria-label="move up"
+        >
+          <ArrowUpwardIcon />
+        </IconButton>
+      </Tooltip>
+      <Tooltip title="Переместить ниже">
+        <IconButton
+          size="small"
+          color="primary"
+          onClick={handleMoveDown}
+          aria-label="move down"
+        >
+          <ArrowDownwardIcon />
+        </IconButton>
+      </Tooltip>
+    </Stack>
+  );
+};
+
+export default ProfileOrderButtons;

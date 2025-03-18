@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Сброс кэша</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 20px;
+      text-align: center;
+      background-color: #f9f9f9;
+    }
+    .container {
+      max-width: 600px;
+      margin: 50px auto;
+      padding: 20px;
+      background-color: white;
+      border-radius: 8px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+    h1 {
+      color: #333;
+    }
+    button {
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      padding: 12px 24px;
+      font-size: 16px;
+      cursor: pointer;
+      border-radius: 4px;
+      margin: 10px;
+    }
+    button:hover {
+      background-color: #45a049;
+    }
+    .hidden {
+      display: none;
+    }
+    .success {
+      color: #4CAF50;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Сброс кэша приложения</h1>
+    <p>Если у вас возникли проблемы с отображением административной панели, нажмите кнопку ниже для сброса кэша.</p>
+    
+    <button id="clearCacheBtn">Сбросить кэш и обновить страницу</button>
+    
+    <div id="status" class="hidden">
+      <p class="success">Кэш успешно очищен!</p>
+      <p>Перенаправление на панель управления...</p>
+    </div>
+    
+    <script>
+      document.getElementById('clearCacheBtn').addEventListener('click', function() {
+        // Очищаем кэш приложения
+        if ('caches' in window) {
+          caches.keys().then(function(names) {
+            names.forEach(function(name) {
+              caches.delete(name);
+            });
+          });
+        }
+        
+        // Очищаем localStorage
+        localStorage.clear();
+        
+        // Очищаем sessionStorage
+        sessionStorage.clear();
+        
+        // Показываем статус
+        document.getElementById('status').classList.remove('hidden');
+        
+        // Задержка перед редиректом
+        setTimeout(function() {
+          window.location.href = '/admin';
+        }, 2000);
+      });
+    </script>
+  </div>
+</body>
+</html>

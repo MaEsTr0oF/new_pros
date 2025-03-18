@@ -1,0 +1,134 @@
+import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios';
+import { API_URL } from '../config';
+import { Profile, City, FilterParams } from '../types';
+
+// Константы для хранения токена
+const TOKEN_KEY = 'auth_token';
+const USER_KEY = 'user';
+
+// Создаем базовый инстанс axios
+const axiosInstance = axios.create({
+  baseURL: API_URL,
+  headers: {
+    'Content-Type': 'application/json',
+  },
+});
+
+// Интерцептор для добавления токена авторизации
+axiosInstance.interceptors.request.use(
+  (config) => {
+    // Проверяем все возможные места хранения токена
+    const token = localStorage.getItem(TOKEN_KEY) || 
+                 localStorage.getItem('token') || 
+                 localStorage.getItem('adminToken');
+    
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+      console.log('Добавлен токен авторизации в запрос:', config.url);
+    } else {
+      console.log('Токен авторизации отсутствует для запроса:', config.url);
+    }
+    return config;
+  },
+  (error) => Promise.reject(error)
+);
+
+// Интерцептор для обработки ошибок авторизации
+axiosInstance.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    if (error.response && error.response.status === 401) {
+      console.log('Ошибка авторизации 401, перенаправление на страницу входа');
+      // При ошибке авторизации перенаправляем на страницу входа
+      if (window.location.pathname !== '/login' && window.location.pathname !== '/admin/login') {
+        window.location.href = '/admin/login';
+      }
+    }
+    return Promise.reject(error);
+  }
+);
+
+// API для авторизации
+const auth = {
+  login: async (username: string, password: string) => {
+    try {
+      const response = await axiosInstance.post('/auth/login', { username, password });
+      const { token, user } = response.data;
+      
+      // Сохраняем токен во всех возможных форматах для совместимости
+      localStorage.setItem(TOKEN_KEY, token);
+      localStorage.setItem('token', token);
+      localStorage.setItem('adminToken', token);
+      
+      // Сохраняем данные пользователя
+      localStorage.setItem(USER_KEY, JSON.stringify(user));
+      
+      console.log('Авторизация успешна, токен сохранен');
+      return response;
+    } catch (error) {
+      console.error('Ошибка авторизации:', error);
+      throw error;
+    }
+  },
+  
+  logout: () => {
+    localStorage.removeItem(TOKEN_KEY);
+    localStorage.removeItem('token');
+    localStorage.removeItem('adminToken');
+    localStorage.removeItem(USER_KEY);
+    console.log('Выход выполнен, токены удалены');
+    window.location.href = '/admin/login';
+  },
+  
+  isAuthenticated: () => {
+    return !!localStorage.getItem(TOKEN_KEY) || 
+           !!localStorage.getItem('token') || 
+           !!localStorage.getItem('adminToken');
+  },
+  
+  getToken: () => {
+    return localStorage.getItem(TOKEN_KEY) || 
+           localStorage.getItem('token') || 
+           localStorage.getItem('adminToken');
+  }
+};
+
+// API для профилей
+const profiles = {
+  getAll: (cityId?: number, filters?: FilterParams) => {
+    const params: any = {};
+    if (cityId) params.cityId = cityId;
+    if (filters) params.filters = JSON.stringify(filters);
+    return axiosInstance.get('/admin/profiles', { params });
+  },
+  getById: (id: number) => axiosInstance.get(`/profiles/${id}`),
+  create: (profile: Profile) => axiosInstance.post('/admin/profiles', profile),
+  update: (id: number, profile: Profile) => axiosInstance.put(`/admin/profiles/${id}`, profile),
+  delete: (id: number) => axiosInstance.delete(`/admin/profiles/${id}`),
+  verify: (id: number) => axiosInstance.patch(`/admin/profiles/${id}/verify`),
+  moveUp: (id: number) => axiosInstance.patch(`/admin/profiles/${id}/moveUp`),
+  moveDown: (id: number) => axiosInstance.patch(`/admin/profiles/${id}/moveDown`),
+};
+
+// Остальные API без изменений
+// ...
+
+// Создаем гибридный API-объект
+interface ApiType extends AxiosInstance {
+  profiles: typeof profiles;
+  auth: typeof auth;
+  // Остальные API
+  // ...
+}
+
+// Создаем базовый объект и расширяем его методами и свойствами
+const api = axiosInstance as ApiType;
+
+// Добавляем объектные API
+api.profiles = profiles;
+api.auth = auth;
+// Остальные API
+// ...
+
+export { api };
+export default api;

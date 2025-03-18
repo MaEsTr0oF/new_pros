@@ -1,0 +1,31 @@
+
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Панель управления | Эскорт</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 0; padding: 20px; background: #f5f5f5; }
+    .container { max-width: 1200px; margin: 0 auto; background: white; padding: 20px; border-radius: 8px; }
+    h1 { color: #333; }
+    .btn { display: inline-block; padding: 10px 15px; background: #4CAF50; color: white; text-decoration: none; border-radius: 4px; margin: 5px; }
+    .warning { background: #FFC107; padding: 15px; border-radius: 4px; margin-bottom: 20px; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Панель управления</h1>
+    <div class="warning">
+      <p>Обнаружены проблемы с загрузкой основного интерфейса. Используйте эти ссылки для доступа:</p>
+    </div>
+    <a href="/admin/profiles" class="btn">Управление анкетами</a>
+    <a href="/admin/cities" class="btn">Управление городами</a>
+    <a href="/admin/settings" class="btn">Настройки</a>
+    
+    <h2>Для разработчиков</h2>
+    <p>Если вы видите эту страницу, значит произошла ошибка при компиляции приложения.</p>
+    <p>Проверьте консоль сервера для получения дополнительной информации об ошибке.</p>
+  </div>
+</body>
+</html>
