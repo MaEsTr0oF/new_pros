@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Тест подключения</title>
+    <meta charset="utf-8">
+    <style>
+        body { font-family: Arial, sans-serif; text-align: center; margin-top: 50px; }
+        .success { color: green; }
+        .error { color: red; }
+    </style>
+</head>
+<body>
+    <h1>Тест подключения к сайту</h1>
+    <p class="success">Если вы видите эту страницу, базовая функциональность nginx работает!</p>
+    <p>Время генерации: <span id="time"></span></p>
+    <script>
+        document.getElementById('time').textContent = new Date().toLocaleString();
+    </script>
+</body>
+</html>
