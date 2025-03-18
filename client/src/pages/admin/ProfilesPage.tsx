@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from 'react';
+import ProfileOrderButtons from '../../components/admin/ProfileOrderButtons';
+import ProfileOrderButtons from '../../components/admin/ProfileOrderButtons';
 import {
   Container,
   Box,
@@ -13,6 +15,8 @@ import {
   Typography,
   Tooltip,
 } from '@mui/material';
+import ProfileOrderButtons from '../../components/admin/ProfileOrderButtons';
+import ProfileOrderButtons from '../../components/admin/ProfileOrderButtons';
 import {
   Add as AddIcon,
   Edit as EditIcon,
@@ -20,8 +24,14 @@ import {
   Check as CheckIcon,
   Block as BlockIcon,
   VerifiedUser as VerifiedIcon,
-} from '@mui/icons-material';
+  ArrowUpward as ArrowUpIcon,
+  ArrowDownward as ArrowDownIcon,
+} from "@mui/icons-material";
+import ProfileOrderButtons from '../../components/admin/ProfileOrderButtons';
+import ProfileOrderButtons from '../../components/admin/ProfileOrderButtons';
 import { api } from '../../utils/api';
+import ProfileOrderButtons from '../../components/admin/ProfileOrderButtons';
+import ProfileOrderButtons from '../../components/admin/ProfileOrderButtons';
 import { Profile, City } from '../../types';
 import ProfileEditor from '../../components/admin/ProfileEditor';
 
@@ -101,6 +111,46 @@ const ProfilesPage: React.FC = () => {
       setError('Ошибка при удалении анкеты');
     }
   };
+
+  const handleMoveUp = async (id: number) => {
+
+    try {
+
+      await api.patch(`/admin/profiles/${id}/moveUp`);
+
+      fetchProfiles(); // Обновляем список профилей
+
+    } catch (error) {
+
+      console.error("Error moving profile up:", error);
+
+      setError("Ошибка при перемещении анкеты вверх");
+
+    }
+
+  };
+
+
+
+  const handleMoveDown = async (id: number) => {
+
+    try {
+
+      await api.patch(`/admin/profiles/${id}/moveDown`);
+
+      fetchProfiles(); // Обновляем список профилей
+
+    } catch (error) {
+
+      console.error("Error moving profile down:", error);
+
+      setError("Ошибка при перемещении анкеты вниз");
+
+    }
+
+  };
+
+
 
   const handleToggleStatus = async (profile: Profile) => {
     try {
@@ -201,6 +251,27 @@ const ProfilesPage: React.FC = () => {
                     <VerifiedIcon />
                   </IconButton>
                 </Tooltip>
+                <Tooltip title="Переместить вверх">
+
+                  <IconButton onClick={() => handleMoveUp(profile.id)} size="small">
+
+                    <ArrowUpIcon />
+
+                  </IconButton>
+
+                </Tooltip>
+
+                <Tooltip title="Переместить вниз">
+
+                  <IconButton onClick={() => handleMoveDown(profile.id)} size="small">
+
+                    <ArrowDownIcon />
+
+                  </IconButton>
+
+                </Tooltip>
+                <ProfileOrderButtons profileId={profile.id} onSuccess={fetchProfiles} onError={setError} />
+                <ProfileOrderButtons profileId={profile.id} onSuccess={fetchProfiles} onError={setError} />
               </CardActions>
             </Card>
           </Grid>

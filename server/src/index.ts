@@ -85,6 +85,8 @@ app.post('/api/admin/profiles', profileController.createProfile);
 app.put('/api/admin/profiles/:id', profileController.updateProfile);
 app.delete('/api/admin/profiles/:id', profileController.deleteProfile);
 app.patch('/api/admin/profiles/:id/verify', profileController.verifyProfile);
+app.patch("/api/admin/profiles/:id/moveUp", profileController.moveProfileUp);
+app.patch("/api/admin/profiles/:id/moveDown", profileController.moveProfileDown);
 app.post('/api/admin/cities', cityController.createCity);
 app.put('/api/admin/cities/:id', cityController.updateCity);
 app.delete('/api/admin/cities/:id', cityController.deleteCity);
